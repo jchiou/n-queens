@@ -143,48 +143,81 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      var board = this.rows();
-      var flattened = _.flatten(board);
-      var result = 0;
-      var n = this.get('n');
-
+      var size = this.get('n');
+      var count = 0;
+      var row = 0;
       var index = majorDiagonalColumnIndexAtFirstRow;
 
-      // iterate over flattened array
-      for (var i = index; i < flattened.length; i = i + n + 1) {
-        // if i has a 1 , add to result
-        if (flattened[i] === 1) {
-          result++;
+      // no starting initial variable for the loop. as long as row and index are less than size, keep looping
+      for ( ; row < size && index < size; row++, index++) {
+        // if index is valid... needs to be here because of next function
+        if (index >= 0) {
+          // get the array of the row we're iterating on
+          var currentRow = this.get(row);
+          // add the value of row[index], whether that be one or zero
+          count += currentRow[index];
         }
       }
 
-      if (result > 1) {
-        return true;
-      } else {
-        return false;
-      } 
+      return count > 1;
+
+
+
+      // var board = this.rows();
+      // var flattened = _.flatten(board);
+      // var result = 0;
+      // var n = this.get('n');
+
+      // var index = majorDiagonalColumnIndexAtFirstRow;
+
+      // // iterate over flattened array
+      // for (var i = index; i < flattened.length; i = i + n + 1) {
+      //   // if i has a 1 , add to result
+      //   if (flattened[i] === 1) {
+      //     result++;
+      //   }
+      // }
+
+      // if (result > 1) {
+      //   return true;
+      // } else {
+      //   return false;
+      // } 
 
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      // NOTE: could possibly return error when row has more than 1 piece
-      var board = this.rows();
-      var flattened = _.flatten(board);
-      var n = this.get('n');
+      var size = this.get('n');
 
-      var startingNums = _.range(0, n - 1);
-      for (var i = 1; i < board.length; i++) {
-        startingNums.push(i * n);
-      }
-
-      for (var j = 0; j < startingNums.length; j++) {
-        if (this.hasMajorDiagonalConflictAt(startingNums[j])) {
+      // why can't we start at 0? 
+      for (var i = 1 - size; i < size; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
           return true;
         }
-      }
+      };
 
-      return false; // fixme
+      return false;
+
+
+
+      // NOTE: could possibly return error when row has more than 1 piece
+      // var board = this.rows();
+      // var flattened = _.flatten(board);
+      // var n = this.get('n');
+
+      // var startingNums = _.range(0, n - 1);
+      // for (var i = 1; i < board.length; i++) {
+      //   startingNums.push(i * n);
+      // }
+
+      // for (var j = 0; j < startingNums.length; j++) {
+      //   if (this.hasMajorDiagonalConflictAt(startingNums[j])) {
+      //     return true;
+      //   }
+      // }
+
+      // return false; // fixme
     },
 
 
@@ -194,79 +227,91 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      var board = this.rows();
-      var result = 0;
-      var flattened = _.flatten(board);
-      var n = this.get('n');
-      // flattened = [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+      var size = this.get('n');
+      var count = 0;
+      var row = 0;
       var index = minorDiagonalColumnIndexAtFirstRow;
 
-      for (var i = index; i < flattened.length; i = i + n - 1) {
-        if (flattened[i] === 1) {
-          result++;
+      // no intial starting value, acts more like a while look. as long as row is less than size and index is greater than or equal to zero, keep looping.
+      // row and index will increase
+      for ( ; row < size && index >= 0; row++, index--) {
+        // if index we're iterating on is less than size (think: [0,0,1],[0,1,0],[1,0,0] where index = 2 and size equals 3)
+        if (index < size) {
+          // set row equal to array
+          var currentRow = this.get(row);
+          // add value of row to count (whether it be zero or one)
+          count += currentRow[index];
         }
       }
 
-      return result > 1 ? true : false;
+      return count > 1;
 
+      // var board = this.rows();
+      // var result = 0;
+      // var flattened = _.flatten(board);
+      // var n = this.get('n');
+      // // flattened = [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+      // var index = minorDiagonalColumnIndexAtFirstRow;
 
+      // // need to create an array of valid starting numbers --- if the index given is not in the valid starting number array, return false
+      // var startingNums = _.range(1, n);
+      // for (var i = 1; i < board.length; i++) {
+      //   startingNums.push(i * n - 1);
+      // }
+      // console.log(startingNums);
+      // if (startingNums.indexOf(index) === -1) {
+      //   return false;
+      // }
 
-
-      // var timesToIterate = board.length - minorDiagonalColumnIndexAtFirstRow;
-
-      // for (var i = 0; i < timesToIterate; i++) {
-      //   if (board[i][minorDiagonalColumnIndexAtFirstRow] !== 0) {
+      // for (var i = index; i < flattened.length; i = i + n - 1) {
+      //   if (flattened[i] === 1 && startingNums.indexOf(flattened[i]) >= -1) {
       //     result++;
-      //     minorDiagonalColumnIndexAtFirstRow--;
       //   }
       // }
-      // if (result > 1) {
-      //   return true;
-      // } else {
-      //   return false;
-      // } 
+
+      // return result > 1 ? true : false;
+
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      // NOTE: could possibly return error when row has more than 1 piece
-      var board = this.rows();
-      var flattened = _.flatten(board);
-      var n = this.get('n');
-      var result = 0;
 
-      var startingNums = _.range(1, n);
+      var size = this.get('n');
 
-      for (var i = 1; i < board.length; i++) {
-        startingNums.push(i * n - 1);
-      }
-
-      startingNums = _.uniq(startingNums);
- 
-      for (var j = 0; j < startingNums.length; j++) {
-        if (this.hasMinorDiagonalConflictAt(startingNums[j])) {
+      // start at (size-1) * size (this will be last element of 2nd to last row every time)
+      for (var i = (size * (size - 1)) - 1; i >= 0; i--) {
+        // iterate over each index to check for diagonal conflict
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          // break out and return true
           return true;
         }
       }
-     
+
       return false;
 
 
-      // looping through each row
-      // for (var j = 0; j < board.length; j++) {
-      //   if (board[j].indexOf(1) > -1) {
-      //     var diag = board[j].indexOf(1);
-      //     for (var k = j + 1; k < board.length - j - 1; k++) {
-              
-      //       if (board[k].indexOf(1) === diag - 1) {
-      //         return true;
-      //       }
-      //       diag--;
-            
-      //     }
+
+      // // NOTE: could possibly return error when row has more than 1 piece
+      // var board = this.rows();
+      // var flattened = _.flatten(board);
+      // var n = this.get('n');
+      // var result = 0;
+
+      // var startingNums = _.range(1, n);
+
+      // for (var i = 1; i < board.length; i++) {
+      //   startingNums.push(i * n - 1);
+      // }
+
+      // startingNums = _.uniq(startingNums);
+ 
+      // for (var j = 0; j < startingNums.length; j++) {
+      //   if (this.hasMinorDiagonalConflictAt(startingNums[j])) {
+      //     return true;
       //   }
       // }
-      // return false; // fixme
+     
+      // return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
