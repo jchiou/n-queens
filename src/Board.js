@@ -148,6 +148,7 @@
       var row = 0;
       var index = majorDiagonalColumnIndexAtFirstRow;
 
+
       // no starting initial variable for the loop. as long as row and index are less than size, keep looping
       for ( ; row < size && index < size; row++, index++) {
         // if index is valid... needs to be here because of next function
@@ -189,6 +190,7 @@
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       var size = this.get('n');
+
 
       // why can't we start at 0? 
       for (var i = 1 - size; i < size; i++) {
@@ -277,6 +279,7 @@
     hasAnyMinorDiagonalConflicts: function() {
 
       var size = this.get('n');
+
 
       // start at (size-1) * size (this will be last element of 2nd to last row every time)
       for (var i = (size * (size - 1)) - 1; i >= 0; i--) {
